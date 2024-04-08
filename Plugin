@@ -1,0 +1,57 @@
+using System;
+using System.Collections.Generic;
+using Exiled.API.Interfaces;
+using UnityEngine;
+
+namespace AdminMenuPlugin
+{
+    public class Plugin : IPlugin
+    {
+        private void ShowAdminMenu()
+        {
+            // Отображение админ меню
+            // Добавьте здесь код для отображения админ меню, например с помощью Unity GUI или других способов
+            
+            // Проигрывание музыки
+            AudioSource audioSource = gameObject.AddComponent<AudioSource>();
+            AudioClip musicClip = Resources.Load<AudioClip>("MusicClip");
+            audioSource.clip = musicClip;
+            audioSource.Play();
+
+            // Убийство игрока
+            Player player = Player.Get(p);
+            player.Kill();
+
+            // Смена класса игрока
+            player.Role = RoleType.Scp173;
+
+            // Другие действия в админ меню
+        }
+
+        public void OnEnable()
+        {
+            // Действия при включении плагина
+            Exiled.Events.Handlers.Player.Destroying += OnPlayerDisconnect;
+
+            RegisterCommands();
+        }
+
+        public void OnDisable()
+        {
+            // Действия при отключении плагина
+            Exiled.Events.Handlers.Player.Destroying -= OnPlayerDisconnect;
+        }
+
+        public void RegisterCommands()
+        {
+            // Регистрация команд админ меню
+            CommandProcessor.RegisterCommand(new Command("adminmenu", "Shows the admin menu.", "adminmenu", ShowAdminMenu));
+        }
+
+        private void OnPlayerDisconnect(Exiled.Events.EventArgs.DiscordingEventArgs ev)
+        {
+            // Действия при отключении игрока
+            // Удаляйте данные игрока из админ меню, если необходимо
+        }
+    }
+}
